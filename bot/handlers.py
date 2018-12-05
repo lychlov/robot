@@ -10,6 +10,7 @@
                    2018/12/3:
 -------------------------------------------------
 """
+import re
 from werobot import WeRoBot
 
 myrobot = WeRoBot(token='loyowanwancc')
@@ -18,7 +19,26 @@ myrobot = WeRoBot(token='loyowanwancc')
 # app_id='wx242d734cd4057dc5', app_secret='a1ffde51020438f076e43e3b19973648',
 #                   encoding_aes_key='S24igTjZOhFawPXnUbLslXjs4LMwsEEyp7lJ4fUn1xI'
 
-@myrobot.handler
+@myrobot.subscribe
 def hello(message):
-    print(message)
-    return 'Hello World!'
+    return '欢迎您使用“网络维护一点通”！\n'+'您的ID为：'+message.source+'\n请联系管理员添加为内部用户。'
+
+
+@myrobot.image
+@myrobot.voice
+def unknown(message):
+    return '暂不支持的消息类型，敬请期待。'
+
+
+@myrobot.filter(re.compile('^10[1-9].*'))
+def old_alarm_handler(message):
+    time = message.time
+    content = message.content
+    source = message.source
+    return source+':传统告警'
+
+
+@myrobot.filter(re.compile('^[3-6]0[1-9].*'))
+def old_commando_handler(message):
+    return '传统指令'
+
