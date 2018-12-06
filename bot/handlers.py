@@ -12,6 +12,8 @@
 """
 import re
 from werobot import WeRoBot
+from .django_api import check_auth
+from .commando_query import call_fx_api
 
 myrobot = WeRoBot(token='loyowanwancc')
 
@@ -21,7 +23,7 @@ myrobot = WeRoBot(token='loyowanwancc')
 
 @myrobot.subscribe
 def hello(message):
-    return '欢迎您使用“网络维护一点通”！\n'+'您的ID为：'+message.source+'\n请联系管理员添加为内部用户。'
+    return '欢迎您使用“网络维护一点通”！\n' + '您的ID为：' + message.source + '\n请联系管理员添加为内部用户。'
 
 
 @myrobot.image
@@ -32,13 +34,18 @@ def unknown(message):
 
 @myrobot.filter(re.compile('^10[1-9].*'))
 def old_alarm_handler(message):
-    time = message.time
-    content = message.content
     source = message.source
-    return source+':传统告警'
+    if not check_auth(source):
+        return '您不是授权用户，无法使用该功能。'
+    time = message.time
+    return source + ':传统告警'
 
 
 @myrobot.filter(re.compile('^[3-6]0[1-9].*'))
 def old_commando_handler(message):
-    return '传统指令'
-
+    source = message.source
+    content = message.content
+    if not check_auth(source):
+        return '您不是授权用户，无法使用该功能。'
+    result = call_fx_api('chengzhikun', content)
+    return result
