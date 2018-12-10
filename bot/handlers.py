@@ -14,6 +14,7 @@ import re
 from werobot import WeRoBot
 from .django_api import check_auth
 from .commando_query import call_fx_api
+from .alarm_query import old_alarm_query
 
 myrobot = WeRoBot(token='loyowanwancc')
 
@@ -32,13 +33,18 @@ def unknown(message):
     return '暂不支持的消息类型，敬请期待。'
 
 
+@myrobot.filter(re.compile('我的ID'))
+def id_check(message):
+    return '您的ID是：%s\n请联系管理员注册内部用户' % message.source
+
+
 @myrobot.filter(re.compile('^10[1-9].*'))
 def old_alarm_handler(message):
     source = message.source
     if not check_auth(source):
         return '您不是授权用户，无法使用该功能。'
-    time = message.time
-    return source + ':传统告警'
+    content = message.content
+    return old_alarm_query(content)
 
 
 @myrobot.filter(re.compile('^[3-6]0[1-9].*'))
