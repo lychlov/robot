@@ -14,7 +14,20 @@ import json
 import requests
 import uuid
 
-from .base_conf import ALARM_BASE_URL, BASE_STATION_QUIT, CELL_QUIT,LINE_LIMIT
+from .base_conf import ALARM_BASE_URL, BASE_STATION_QUIT, CELL_QUIT, LINE_LIMIT
+
+
+def fuzzy_query(content):
+    paras = {'sessionid': uuid.uuid1(),
+             'device_city': '南阳市',
+             'page': 1,
+             'limit': LINE_LIMIT,
+             'object_name_like':  content + '%',
+             }
+    response = requests.get(url=ALARM_BASE_URL, params=paras)
+    result = json.loads(response.content.decode())
+    return parse_101(result)
+
 
 def old_alarm_query(content):
     QUERY_FUNS = {'101': query_101,
@@ -89,7 +102,8 @@ def query_105(zone=None):
 
 
 def query_106(zone=None):
-    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT, 'event_id': BASE_STATION_QUIT}
+    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT,
+             'event_id': BASE_STATION_QUIT}
     if zone:
         paras['device_county'] = zone
     response = requests.get(url=ALARM_BASE_URL, params=paras)
@@ -98,7 +112,8 @@ def query_106(zone=None):
 
 
 def query_107(zone=None):
-    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT, 'vendor_event_id': '92001'}
+    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT,
+             'vendor_event_id': '92001'}
     if zone:
         paras['device_county'] = zone
     response = requests.get(url=ALARM_BASE_URL, params=paras)
@@ -107,7 +122,9 @@ def query_107(zone=None):
 
 
 def parse_101(result):
-    parsed = "序号|网元名称|所属区县|设备厂家|告警发生时间|厂家告警号|告警中文名|告警对象名称|基站编号\n";
+    if not result:
+        return '当前无告警数据'
+    parsed = "序号|网元名称|所属区县|设备厂家|告警发生时间|厂家告警号|告警中文名|告警对象名称|基站编号\n"
     index = 1
     for item in result:
         parsed += str(index) + "|" + item.get("device_name") + "|" + item.get("device_county") + "|" + item.get(

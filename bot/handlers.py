@@ -12,9 +12,11 @@
 """
 import re
 from werobot import WeRoBot
+from werobot.replies import TextReply
+
 from .django_api import check_auth
 from .commando_query import call_fx_api
-from .alarm_query import old_alarm_query
+from .alarm_query import old_alarm_query, fuzzy_query
 
 myrobot = WeRoBot(token='loyowanwancc')
 
@@ -31,6 +33,12 @@ def hello(message):
 @myrobot.voice
 def unknown(message):
     return '暂不支持的消息类型，敬请期待。'
+
+
+@myrobot.filter(re.compile('帮助'))
+def help(message):
+    return '''
+    '''
 
 
 @myrobot.filter(re.compile('我的ID'))
@@ -54,4 +62,15 @@ def old_commando_handler(message):
     if not check_auth(source):
         return '您不是授权用户，无法使用该功能。'
     result = call_fx_api('chengzhikun', content)
+    return result
+
+
+@myrobot.handler
+def fuzzy(message):
+    source = message.source
+    content = message.content
+    if not check_auth(source):
+        return '您不是授权用户，无法使用该功能。'
+    # myrobot.client.send_text_message(user_id=source, content='正在根据关键字“%s”进行模糊告警查询，请稍后' % content)
+    result = fuzzy_query(content)
     return result
