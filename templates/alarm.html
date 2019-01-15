@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" charset="UTF-8">
+    <title>告警查询结果</title>
+    <meta name="viewport" content="width=device-width, target-densityDpi=device-dpi">
+    <script type="text/javascript">
+        var phoneWidth = parseInt(window.screen.width);
+        var phoneScale = (phoneWidth / 640);
+        var viewport = document.querySelector("meta[name=viewport]");
+        if (isWeixin()) {
+            viewport.setAttribute('content', 'width=640, initial-scale = ' + phoneScale + ', minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi');
+        } else {
+            viewport.setAttribute('content', 'width=640');
+            window.setTimeout(function () {
+                viewport.setAttribute('content', 'width=640');
+            }, 1000);
+        }
+        function isWeixin() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="stylesheet" type="text/css" href="{% static "css/mainstyle.css" %}"/>
+</head>
+<body>
+<div id="zlsj" class="area_blk">
+    <div class="area_tit">
+        <h3>告警数据</h3>
+    </div>
+
+    {% if alarm_list %}
+        {% for alarm in alarm_list %}
+        <table border="0" cellpadding="0" cellspacing="0" class="infostyle2">
+
+        <tr>
+            <th align="left" nowrap="nowrap">所属区县</th>
+            <td align="left">{{ alarm.device_county }}</td>
+        </tr>
+        <tr>
+            <th align="left" nowrap="nowrap">网元名称</th>
+            <td align="left">{{ alarm.device_name }}</td>
+        </tr>
+
+        <tr>
+            <th align="left" nowrap="nowrap">设备厂家</th>
+            <td align="left">{{ alarm.device_vendor }}</td>
+        </tr>
+        <tr>
+            <th align="left" nowrap="nowrap">告警发生时间</th>
+            <td align="left">{{ alarm.last_time }}</td>
+        </tr>
+        <tr>
+            <th align="left" nowrap="nowrap">厂家告警号</th>
+            <td align="left">{{ alarm.vendor_event_id }}</td>
+        </tr>
+        <tr>
+            <th align="left" nowrap="nowrap">告警中文名</th>
+            <td align="left">{{ alarm.title }}</td>
+        </tr>
+        <tr>
+            <th align="left" nowrap="nowrap">告警对象名称</th>
+            <td align="left">{{ alarm.object_name }}</td>
+        </tr>
+        <tr>
+            <th align="left" nowrap="nowrap">基站编号</th>
+            <td align="left">{{ alarm.property11 }}</td>
+        </tr>
+        </table>
+        {% endfor %}
+    {% endif %}
+</div>
+<!--  <div align="center"><input type="button" value="返回" onclick="javascript:window.close();" /></div>-->
+{#<div class="ctrl_page"><span onclick="javascript:window.close();"><a href="#"> 返回 </a></span></div>#}
+<br/>
+
+</body>
+</html>

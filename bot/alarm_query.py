@@ -13,20 +13,22 @@
 import json
 import requests
 import uuid
-
-from .base_conf import ALARM_BASE_URL, BASE_STATION_QUIT, CELL_QUIT, LINE_LIMIT
+from urllib.parse import urlencode
+from .base_conf import OBJECT_TYPE, ALARM_BASE_URL, BASE_STATION_QUIT, CELL_QUIT, LINE_LIMIT
 
 
 def fuzzy_query(content):
-    paras = {'sessionid': uuid.uuid1(),
+    query_id = uuid.uuid1()
+    paras = {'sessionid': query_id,
              'device_city': '南阳市',
              'page': 1,
              'limit': LINE_LIMIT,
-             'object_name_like':  content + '%',
+             'object_name_like': '%' + content + '%',
              }
-    response = requests.get(url=ALARM_BASE_URL, params=paras)
-    result = json.loads(response.content.decode())
-    return parse_101(result)
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE
+    # response = requests.get(url=url)
+    # result = json.loads(response.content.decode())
+    return query_id, url
 
 
 def old_alarm_query(content):
@@ -53,82 +55,105 @@ def old_alarm_query(content):
 
 
 def query_101(zone=None):
-    paras = {'sessionid': uuid.uuid1(),
+    query_id = uuid.uuid1()
+    paras = {'sessionid': query_id,
              'device_city': '南阳市',
              'page': 1,
              'limit': LINE_LIMIT,
              }
     if zone:
         paras['device_county'] = zone
-    response = requests.get(url=ALARM_BASE_URL, params=paras)
-    result = json.loads(response.content.decode())
-    return parse_101(result)
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE
+    # response = requests.get(url=url)
+    # result = json.loads(response.content.decode())
+    # return parse_101(result)
+    return query_id, url
 
 
 def query_102(cell_id=None):
     if cell_id is None:
         return '支持的格式为"102，基站号",请重试。'
-    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT, 'property11': cell_id}
-    response = requests.get(url=ALARM_BASE_URL, params=paras)
-    result = json.loads(response.content.decode())
-    return parse_101(result)
+    query_id = uuid.uuid1()
+    paras = {'sessionid': query_id, 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT, 'property11': cell_id}
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE
+    # response = requests.get(url=ALARM_BASE_URL, params=paras)
+    # result = json.loads(response.content.decode())
+    # return parse_101(result)
+    return query_id, url
 
 
 def query_103(alarm_id=None):
     if alarm_id is None:
         return '支持的格式为"103，网管告警ID",请重试。'
-    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT, 'event_id': alarm_id}
-    response = requests.get(url=ALARM_BASE_URL, params=paras)
-    result = json.loads(response.content.decode())
-    return parse_101(result)
+    query_id = uuid.uuid1()
+    paras = {'sessionid': query_id, 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT, 'event_id': alarm_id}
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE
+    # response = requests.get(url=ALARM_BASE_URL, params=paras)
+    # result = json.loads(response.content.decode())
+    # return parse_101(result)
+    return query_id, url
 
 
 def query_104(ci=None):
     if ci is None:
         return '支持的格式为"104，小区CI",请重试。'
-    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT, 'property9': ci}
-    response = requests.get(url=ALARM_BASE_URL, params=paras)
-    result = json.loads(response.content.decode())
-    return parse_101(result)
+    query_id = uuid.uuid1()
+    paras = {'sessionid': query_id, 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT, 'property9': ci}
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE
+    # response = requests.get(url=ALARM_BASE_URL, params=paras)
+    # result = json.loads(response.content.decode())
+    # return parse_101(result)
+    return query_id, url
 
 
 def query_105(zone=None):
-    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT, 'event_id': CELL_QUIT}
+    query_id = uuid.uuid1()
+    paras = {'sessionid': query_id, 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT}
     if zone:
         paras['device_county'] = zone
-    response = requests.get(url=ALARM_BASE_URL, params=paras)
-    result = json.loads(response.content.decode())
-    return parse_101(result)
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE + CELL_QUIT
+    # response = requests.get(url=url)
+    # result = json.loads(response.content.decode())
+    # return parse_101(result)
+    return query_id, url
 
 
 def query_106(zone=None):
-    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT,
-             'event_id': BASE_STATION_QUIT}
+    query_id = uuid.uuid1()
+    paras = {'sessionid': query_id, 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT}
     if zone:
         paras['device_county'] = zone
-    response = requests.get(url=ALARM_BASE_URL, params=paras)
-    result = json.loads(response.content.decode())
-    return parse_101(result)
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE + BASE_STATION_QUIT
+    # response = requests.get(url=url)
+    # result = json.loads(response.content.decode())
+    # return parse_101(result)
+    return query_id, url
 
 
 def query_107(zone=None):
-    paras = {'sessionid': uuid.uuid1(), 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT,
+    query_id = uuid.uuid1()
+    paras = {'sessionid': query_id, 'device_city': '南阳市', 'page': 1, 'limit': LINE_LIMIT,
              'vendor_event_id': '92001'}
     if zone:
         paras['device_county'] = zone
-    response = requests.get(url=ALARM_BASE_URL, params=paras)
-    result = json.loads(response.content.decode())
-    return parse_101(result)
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE + BASE_STATION_QUIT
+    # response = requests.get(url=ALARM_BASE_URL, params=paras)
+    # result = json.loads(response.content.decode())
+    # return parse_101(result)
+    return query_id, url
 
 
 def parse_101(result):
     if not result:
         return '当前无告警数据'
-    parsed = "序号|网元名称|所属区县|设备厂家|告警发生时间|厂家告警号|告警中文名|告警对象名称|基站编号\n"
+    parsed = "序号|所属区县|网元名称|设备厂家|告警发生时间|厂家告警号|告警中文名|告警对象名称|基站编号\n"
     index = 1
     for item in result:
-        parsed += str(index) + "|" + item.get("device_name") + "|" + item.get("device_county") + "|" + item.get(
-            "device_vendor") + "|" + item.get("last_time") + "|" + item.get("vendor_event_id") + "|" + item.get(
-            "title") + "|" + item.get("object_name") + "|" + str(item.get("property11")) + "\n"
-        index += 1
+        try:
+            parsed += str(index) + "|" + item.get("device_county") + "|" + item.get("device_name") + "|" + item.get(
+                "device_vendor") + "|" + item.get("last_time") + "|" + item.get("vendor_event_id") + "|" + item.get(
+                "title") + "|" + item.get("object_name") + "|" + str(item.get("property11")) + "\n\n"
+            index += 1
+        except:
+            pass
     return parsed

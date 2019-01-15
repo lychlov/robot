@@ -12,3 +12,9 @@ class User(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class QueryLog(models.Model):
+    uuid = models.UUIDField('UUID')
+    open_id = models.CharField('微信ID', max_length=200)
+    url = models.TextField('URL',max_length=6000)

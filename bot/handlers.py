@@ -13,10 +13,11 @@
 import re
 from werobot import WeRoBot
 from werobot.replies import TextReply
-
-from .django_api import check_auth
+from werobot.replies import ArticlesReply, Article
+from .django_api import check_auth, new_query
 from .commando_query import call_fx_api
 from .alarm_query import old_alarm_query, fuzzy_query
+from bot.base_conf import APP_URL
 
 myrobot = WeRoBot(token='loyowanwancc')
 
@@ -52,17 +53,28 @@ def old_alarm_handler(message):
     if not check_auth(source):
         return '您不是授权用户，无法使用该功能。'
     content = message.content
-    return old_alarm_query(content)
+    query_id, url = old_alarm_query(content)
+    print(new_query(source, query_id, url))
+    reply = ArticlesReply(message=message)
+    article = Article(
+        title="告警详情",
+        description="南阳网络运维一点通",
+        img="https://github.com/apple-touch-icon-144.png",
+        url=APP_URL + "?open_id=%s&uuid=%s" % (source, query_id))
+    reply.add_article(article)
+    return reply
+    # return old_alarm_query(content)
 
 
-@myrobot.filter(re.compile('^[3-6]0[1-9].*'))
+@myrobot.filter(re.compile('^[3-6][0-3][1-9].*'))
 def old_commando_handler(message):
-    source = message.source
-    content = message.content
-    if not check_auth(source):
-        return '您不是授权用户，无法使用该功能。'
-    result = call_fx_api('chengzhikun', content)
-    return result
+    return "功能正在开发，敬请期待。。。"
+    # source = message.source
+    # content = message.content
+    # if not check_auth(source):
+    #     return '您不是授权用户，无法使用该功能。'
+    # result = call_fx_api('chengzhikun', content)
+    # return result
 
 
 @myrobot.handler
@@ -72,5 +84,16 @@ def fuzzy(message):
     if not check_auth(source):
         return '您不是授权用户，无法使用该功能。'
     # myrobot.client.send_text_message(user_id=source, content='正在根据关键字“%s”进行模糊告警查询，请稍后' % content)
-    result = fuzzy_query(content)
-    return result
+    query_id, url = fuzzy_query(content)
+    print(new_query(source, query_id, url))
+    print(url)
+    # result = fuzzy_query(content)
+    # return result
+    reply = ArticlesReply(message=message)
+    article = Article(
+        title="告警详情",
+        description="南阳网络运维一点通",
+        img="https://github.com/apple-touch-icon-144.png",
+        url=APP_URL + "?open_id=%s&uuid=%s" % (source, query_id))
+    reply.add_article(article)
+    return reply
