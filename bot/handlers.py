@@ -93,7 +93,7 @@ def fuzzy(message):
     article = Article(
         title="告警详情",
         description="南阳网络运维一点通",
-        img="https://github.com/apple-touch-icon-144.png",
+        img='http://robot.loyowanwan.cc/static/pics/gumpla.jpg',
         url=APP_URL + "?open_id=%s&uuid=%s" % (source, query_id))
     reply.add_article(article)
     return reply
