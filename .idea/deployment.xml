@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="10.217.8.213">
+  <component name="PublishConfigData" autoUpload="Always" serverName="ops@10.217.8.213:22">
     <serverData>
       <paths name="10.217.8.213">
         <serverdata>
           <mappings>
-            <mapping deploy="/robot" local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="ops@10.217.8.213:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/ops/robot" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

@@ -14,7 +14,8 @@ import json
 import requests
 import uuid
 from urllib.parse import urlencode
-from .base_conf import OBJECT_TYPE, ALARM_BASE_URL, BASE_STATION_QUIT, CELL_QUIT, LINE_LIMIT
+from .base_conf import TOWN_COUNTY, VENDOR_EVENT_ID, OBJECT_TYPE, ALARM_BASE_URL, BASE_STATION_QUIT, CELL_QUIT, \
+    LINE_LIMIT
 
 
 def fuzzy_query(content):
@@ -25,7 +26,7 @@ def fuzzy_query(content):
              'limit': LINE_LIMIT,
              'object_name_like': '%' + content + '%',
              }
-    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + VENDOR_EVENT_ID
     # response = requests.get(url=url)
     # result = json.loads(response.content.decode())
     return query_id, url
@@ -63,7 +64,10 @@ def query_101(zone=None):
              }
     if zone:
         paras['device_county'] = zone
-    url = ALARM_BASE_URL + '?' + urlencode(paras) + OBJECT_TYPE
+    url = ALARM_BASE_URL + '?' + urlencode(paras) + VENDOR_EVENT_ID
+    if 'device_county' in paras.keys():
+        if paras['device_county'] == '郊区':
+            url = url + TOWN_COUNTY
     # response = requests.get(url=url)
     # result = json.loads(response.content.decode())
     # return parse_101(result)

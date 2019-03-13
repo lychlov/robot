@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from werobot.contrib.django import make_view
 from bot.handlers import myrobot
+from dcl_bot.handlers import dcl_robot
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('robot_admin/', include('robot_admin.urls')),
     path('robot/', make_view(myrobot)),
+    path('zhdd/', make_view(dcl_robot)),
 ]
