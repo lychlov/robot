@@ -58,6 +58,12 @@ def yw_handler(message):
     result = parse_tuple(sql_executor.executor('wx', para))
     return result
 
+@dcl_robot.filter(re.compile('^lh.*'))
+def yw_handler(message):
+    sql_executor = SQLExecutor()
+    para = message.content[2:]
+    result = parse_tuple(sql_executor.executor('lh', para))
+    return result
 
 @dcl_robot.image
 @dcl_robot.voice
