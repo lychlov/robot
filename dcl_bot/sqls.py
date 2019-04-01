@@ -1,14 +1,13 @@
 wx_sql = "SELECT lte.eNodeB,lte.`name`,lte.area,ptnw.ptn,ptnw.`port`,ptnw.site FROM lte INNER JOIN ptnw ON lte.eNodeB = ptnw.eNodeB WHERE lte.eNodeB LIKE '%para%'"
 yw_sql = """
 SELECT
-	ptnw.ptn,
 	yw.yw,
+	yw,prime,
 	yw.AAA 
 FROM
-	ptnw
-	LEFT JOIN yw ON ptnw.ptn = yw.prime 
+	yw
 WHERE
-	ptnw.ptn LIKE '%para%'
+	yw.prime LIKE '%para%'
 """
 jz_sql = """
 SELECT
@@ -35,4 +34,15 @@ FROM
 WHERE
 	ptnw.site LIKE '%para%'
 """
-sqls = {'yw': yw_sql, 'jz': jz_sql, 'jf': jf_sql, 'wx': wx_sql}
+lh_sql= """
+SELECT
+	ptn.ptn,
+	ptn.type,
+	ptn.source,
+	ptn.stype
+FROM
+	ptn
+WHERE
+	ptn.ptn LIKE '%para%"
+"""	
+sqls = {'yw': yw_sql, 'jz': jz_sql, 'jf': jf_sql, 'wx': wx_sql, 'lh':lh_sql}
